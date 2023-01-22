@@ -7,6 +7,7 @@ public class FormPanel extends JPanel{
     JPanel buttonCont = new JPanel();
     String lineNames[] = {"Name:", "Street:", "City:", "State:", "Zipcode:", "Phone Number:"};
     JLabel warningLabel = new JLabel(" ");
+    JLabel existWarningLabel = new JLabel(" ");
     JLabel labels[] = new JLabel[6];
     JTextField fields[] = new JTextField[6];
     JPanel containers[] = new JPanel[6];
@@ -30,6 +31,7 @@ public class FormPanel extends JPanel{
 
         add(warningLabel);
         add(buttonCont);
+        add(existWarningLabel);
     }
 
     public JButton getBackButton() {
@@ -47,4 +49,8 @@ public class FormPanel extends JPanel{
     public void setFormWarning(){
         warningLabel.setText("Please fill out every field.");
     }
-}
+
+    public void setExistWarning(){
+        existWarningLabel.setText("You are already an existing customer.  Here is a reminder of your ID: ");
+    }
+} 

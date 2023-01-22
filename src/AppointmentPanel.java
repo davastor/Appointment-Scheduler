@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.awt.BorderLayout;
-import java.sql.Date;
 import com.github.lgooddatepicker.components.*;
 import com.github.lgooddatepicker.components.TimePickerSettings.TimeIncrement;
 import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
@@ -31,38 +33,6 @@ public class AppointmentPanel extends JPanel{
     AppointmentPanel(){
         //uses TimePicker methods to generate custom list of times from 9AM to 5PM with one hour increments
         timePicker.getSettings().generatePotentialMenuTimes(inc, startTime, endTime);
-
-        //uses DatePicker methods to generate custom dates from tomorrow's date up to one year later
-        datePicker.getSettings().setVetoPolicy(new DateVetoPolicy() {
-            public boolean isDateAllowed(LocalDate date){
-                if(date.equals(specifiedDate))
-                    return false;
-                else if(date.isBefore(startDate))
-                    return false;
-                else if(date.isAfter(endDate))
-                    return false;
-                else
-                    return true;
-            }
-        });
-
-        timePicker.getSettings().setVetoPolicy(new TimeVetoPolicy() {
-            public boolean isTimeAllowed(LocalTime time){
-                if(time.equals(specifiedTime))
-                    return false;
-                else if(time.getMinute() != 0)
-                    return false;
-                else if(time.getSecond() != 0)
-                    return false;
-                else if(time.getNano() != 0)
-                    return false;
-                else
-                    return true;
-            }
-        });
-
-
-
 
         setLayout(new BorderLayout());
         pickerCont.add(datePicker);
@@ -94,4 +64,50 @@ public class AppointmentPanel extends JPanel{
         warningLabel.setText("Please select a date/time.");
    }
 
+   public void removeDatesAndTimes(ArrayList<Customer> customers){
+
+        datePicker.getSettings().setVetoPolicy(new DateVetoPolicy() {
+            public boolean isDateAllowed(LocalDate date){
+
+                for(Customer customer: customers){
+
+                    if(date.toString().equals(customer.getDate())){ 
+                        
+                        return false;
+                    }
+            
+                }
+                if(date.isBefore(startDate))
+                    return false;
+                if(date.isAfter(endDate))
+                    return false;
+                
+                return true;
+            }
+        });
+
+        timePicker.getSettings().setVetoPolicy(new TimeVetoPolicy() {
+            public boolean isTimeAllowed(LocalTime time){
+                String formattedTime = time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
+      
+                for(Customer customer: customers){
+                    System.out.println(formattedTime);
+                    System.out.println(customer.getTime());
+                    if(formattedTime.equals(customer.getTime()))
+                        return false;
+                }
+
+                if(time.getMinute() != 0)
+                    return false;
+                if(time.getSecond() != 0)
+                    return false;
+                if(time.getNano() != 0)
+                    return false;
+                
+                return true;
+            }
+        });
+
+
+   }
 }
