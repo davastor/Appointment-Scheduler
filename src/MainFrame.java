@@ -25,6 +25,7 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
     private JPanel panelCont = new JPanel();
     private FormPanel formPanel = new FormPanel();
     private WelcomePanel welcomePanel = new WelcomePanel();
+    private NameSearchPanel searchPanel = new NameSearchPanel();
     private AppointmentPanel appointPanel = new AppointmentPanel();
     private ConfirmationPanel confirmPanel = new ConfirmationPanel();
     private CardLayout cl = new CardLayout();
@@ -36,7 +37,7 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
 
     MainFrame(){
         fillArrayList();
-        appointPanel.removeDatesAndTimes(customers);
+        appointPanel.fillDates(customers);
 
         
         existingCust = false;
@@ -46,6 +47,7 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
         panelCont.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(15, 15, 15, 15),  new EtchedBorder()));
 
         panelCont.add("welcome", welcomePanel);
+        panelCont.add("search", searchPanel);
         panelCont.add("form", formPanel);
         panelCont.add("appoint", appointPanel);
         panelCont.add("confirm", confirmPanel);
@@ -56,12 +58,14 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
 
         welcomePanel.getNewButton().addActionListener(this);
         welcomePanel.getExistButton().addActionListener(this);
-        formPanel.getBackButton().addActionListener(this);
-        formPanel.getSubmitButton().addActionListener(this);
-        appointPanel.getBackButton().addActionListener(this);
-        appointPanel.getNextButton().addActionListener(this);
+        formPanel.getBackBtn().addActionListener(this);
+        formPanel.getNextBtn().addActionListener(this);
+        appointPanel.getBackBtn().addActionListener(this);
+        appointPanel.getNextBtn().addActionListener(this);
         confirmPanel.getBackButton().addActionListener(this);
         confirmPanel.getConfirmButton().addActionListener(this);
+        searchPanel.getBackBtn().addActionListener(this);
+        searchPanel.getNextBtn().addActionListener(this);
 
         add(panelCont);
         setVisible(true);
@@ -70,35 +74,48 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
 
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == welcomePanel.getNewButton()){
-            cl.next(panelCont);
+            cl.show(panelCont, "form");
         }
         else if(e.getSource() == welcomePanel.getExistButton()){
             existingCust = true;
-            cl.show(panelCont, "appoint");
+            cl.show(panelCont, "search");
         }
-        else if(e.getSource() == formPanel.getSubmitButton()){
+        else if(e.getSource() == searchPanel.getBackBtn()){
+            existingCust = false;
+            cl.previous(panelCont);
+        }
+        else if(e.getSource() == searchPanel.getNextBtn()){
+            if(appendExistingCustomer()){
+                cl.show(panelCont, "appoint");
+            }
+            else{
+                return;
+            }
+         
+        }        
+        else if(e.getSource() == formPanel.getBackBtn()){
+            cl.show(panelCont, "welcome");
+        }
+        else if(e.getSource() == formPanel.getNextBtn()){
             if(!submitFormData())
                 return;
             else
-                cl.next(panelCont);
+                cl.show(panelCont, "appoint");
         }
-        else if(e.getSource() == formPanel.getBackButton()){
-            cl.previous(panelCont);
-        }
-        else if(e.getSource() == appointPanel.getNextButton()){
+        else if(e.getSource() == appointPanel.getNextBtn()){
             submitAppointment();
             confirmPanel.setLabel(customers.get(customers.size()-1));
             cl.next(panelCont);
         }
-        else if(e.getSource() == appointPanel.getBackButton()){
+        else if(e.getSource() == appointPanel.getBackBtn()){
             if(existingCust){
-                cl.show(panelCont, "welcome");
+                cl.show(panelCont, "search");
                 existingCust = false;
             }
             else
                 cl.previous(panelCont);
 
-            //remove new customer object in case customer decides to resubmit the form
+            //remove new customer object in case customer decides to resubmit the form or search up a different name
             //prevents extra objects from being added to the ArrayList
             customers.remove(customers.size()-1);
         }
@@ -109,10 +126,11 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
         }
         else{
             appendDatabase();
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
     }
 
-    //submits data in text fields, returns true or false 
+    //submits data in text fields, returns false if fields are incomplete or if customer already exists, otherwise return true 
     //to determine if layout should go to next panel
     private boolean submitFormData(){
 
@@ -137,7 +155,6 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
         //return false so that layout knows to NOT go to the next panel
         for(Customer cust: customers){
             if(newCustomer.equals(cust)){
-                System.out.println("test");
                 formPanel.setExistWarning();
                 return false;
             }
@@ -214,6 +231,28 @@ public class MainFrame extends JFrame implements ActionListener, CustomerDatabas
         }catch (IOException e){
             System.out.println("File not found.");
         }
+    }
+
+    //searches through Customer ArrayList to find a customer by name
+    //creates a copy of that customer and adds it to the end of the ArrayList
+    //returns true if customer was found, false if customer was not found
+
+    public boolean appendExistingCustomer(){
+
+        for(Customer customer: customers){
+
+            System.out.println(searchPanel.getTextFieldValue());
+            System.out.println(customer.getName());
+            if(searchPanel.getTextFieldValue().equals(customer.getName())){
+                System.out.println("TEST");
+                Customer existCust = new Customer(customer);
+                customers.add(existCust);
+                return true;
+            }
+        }
+
+        searchPanel.setWarningLabel();
+        return false;
     }
 }
 

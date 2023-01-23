@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.swing.*;
 
 public class Customer{
-    private int id;
     private String name;
     private String street;
     private String city;
@@ -15,19 +14,18 @@ public class Customer{
     private String time;
 
     Customer(){
+        
     }
 
-    Customer(int id, String name, String street, String city, String state, String zip, String phoneNum, String date, String time){
-        this.id = id;
-        this.name = name;
-        this.street = street;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
-        this.phoneNum = phoneNum;
-        this.date = date;
-        this.time = time;
+    Customer(Customer cust){
+        name = cust.name;
+        street = cust.street;
+        city = cust.city;
+        state = cust.state;
+        zip = cust.zip;
+        phoneNum = cust.phoneNum;
     }
+
 
     void setData(JTextField []fields){
         name = fields[0].getText();

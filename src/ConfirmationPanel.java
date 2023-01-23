@@ -30,7 +30,7 @@ public class ConfirmationPanel extends JPanel{
     }
 
     public void setLabel(Customer cust){
-        confirmMsg.setText("Hello " + cust.getName() + ", your service will see you on " + cust.getDate() + " at " + cust.getTime() + ".\n"
+        confirmMsg.setText("Hello " + cust.getName() + ", your aquarium service technician will see you on " + cust.getDate() + " at " + cust.getTime() + ".\n"
                             + "Please confirm this appointment.");
     }
 

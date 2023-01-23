@@ -1,13 +1,12 @@
 import javax.swing.*;
+
+import java.awt.BorderLayout;
 import java.awt.event.*;
 
-public class FormPanel extends JPanel{
-    JButton submitBtn = new JButton("Submit");
-    JButton backBtn = new JButton("Back");
-    JPanel buttonCont = new JPanel();
+public class FormPanel extends GenericPanel{
     String lineNames[] = {"Name:", "Street:", "City:", "State:", "Zipcode:", "Phone Number:"};
+    JPanel buttonCont = new JPanel();
     JLabel warningLabel = new JLabel(" ");
-    JLabel existWarningLabel = new JLabel(" ");
     JLabel labels[] = new JLabel[6];
     JTextField fields[] = new JTextField[6];
     JPanel containers[] = new JPanel[6];
@@ -26,20 +25,12 @@ public class FormPanel extends JPanel{
             containers[i].add(fields[i]);
             add(containers[i]);
         }
-        buttonCont.add(backBtn);
-        buttonCont.add(submitBtn); 
+        btnCont.add(backBtn);
+        btnCont.add(nextBtn); 
 
         add(warningLabel);
-        add(buttonCont);
-        add(existWarningLabel);
-    }
-
-    public JButton getBackButton() {
-        return backBtn;
-    }
-
-    public JButton getSubmitButton(){
-        return submitBtn;
+        add(Box.createVerticalGlue());
+        add(btnCont);
     }
 
     public JTextField[] getTextFields(){
@@ -51,6 +42,6 @@ public class FormPanel extends JPanel{
     }
 
     public void setExistWarning(){
-        existWarningLabel.setText("You are already an existing customer.  Here is a reminder of your ID: ");
+        warningLabel.setText("You are already an existing customer.  Here is a reminder of your ID: ");
     }
 } 
