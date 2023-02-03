@@ -1,9 +1,7 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
 
 
+//interface that opens the customerData.txt file
 
 public interface CustomerDatabase {
     File file = new File("customerData.txt");
