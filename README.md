@@ -1,18 +1,8 @@
-## Getting Started
+This program makes use of the concepts learned in CIS-18A: Java Programming such as inheritance, polymorphism, abstraction, and encapsulation.  
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Upon runtime, this program generates a GUI window for users to input their address and contact information and make appointments for 
+aquarium maintenance services.  All customer information is saved to a text file to maintain persistent data.
 
-## Folder Structure
+All GUI components are generated using the Java Swing library.
 
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+This program uses the LGoodDateTimePicker library at https://github.com/LGoodDatePicker/LGoodDatePicker.
